@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Media;
 
 namespace SpaceRace
 {
@@ -85,6 +86,8 @@ namespace SpaceRace
                 case Keys.Space:
                     if (gameState == "waiting" || gameState == "over")
                     {
+                        SoundPlayer confirmBeep = new SoundPlayer(Properties.Resources.confirmBeep);
+                        confirmBeep.Play();
                         GameInitialize();
                     }
                     break;
@@ -177,21 +180,25 @@ namespace SpaceRace
                 }
             }
 
-            //check for collision of obstacle and player 1
+            //check for collision of obstacles and players
             for (int i = 0; i < obstacle.Count(); i++)
             {
+                //check for collision of obstacle and player 1
                 if (player1.IntersectsWith(obstacle[i]))
                 {
                     player1.Location = new Point(260, 370); //move player 1 back to start
+                    obstacle.RemoveAt(i); //remove obstacle from list
+                    obstacleSpeeds.RemoveAt(i); //remove obstacle speed from list
+                    SoundPlayer blip = new SoundPlayer(Properties.Resources.blip);
+                    blip.Play();
                 }
-            }
-
-            //check for collision of obstacle and player 2
-            for (int i = 0; i < obstacle.Count(); i++)
-            {
-                if (player2.IntersectsWith(obstacle[i]))
+                else if (player2.IntersectsWith(obstacle[i])) //check for collision of obstacle and player 2d
                 {
                     player2.Location = new Point(420, 370); //move player 2 back to start
+                    obstacle.RemoveAt(i); //remove obstacle from list
+                    obstacleSpeeds.RemoveAt(i); //remove obstacle speed from list 
+                    SoundPlayer blip = new SoundPlayer(Properties.Resources.blip);
+                    blip.Play();
                 }
             }
 
@@ -210,7 +217,10 @@ namespace SpaceRace
             {
                 player1.Location = new Point(260, 370);
                 p1Score++;
+                SoundPlayer confirmBeep = new SoundPlayer(Properties.Resources.confirmBeep);
+
                 p1ScoreLabel.Text = $"{p1Score}";
+                confirmBeep.Play();
             }
 
             //check if player 2 got to the top
@@ -218,7 +228,10 @@ namespace SpaceRace
             {
                 player2.Location = new Point(420, 370);
                 p2Score++;
+                SoundPlayer confirmBeep = new SoundPlayer(Properties.Resources.confirmBeep);
+
                 p2ScoreLabel.Text = $"{p2Score}";
+                confirmBeep.Play();
             }
 
             //check if time is up
